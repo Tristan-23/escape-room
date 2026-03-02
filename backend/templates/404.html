@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Not Found | The Midnight Escape{% endblock %}
+
+{% block content %}
+  <div class="page-title dark-background" data-aos="fade">
+    <div class="heading">
+      <div class="container text-center">
+        <i class="bi bi-door-open display-1 d-block mb-3"></i>
+        <h1>404 — That Door Doesn't Exist</h1>
+        <p>The room you're looking for is locked from the other side — or simply isn't here.</p>
+        <a href="{{ url_for('home') }}" class="btn-get-started mt-3 d-inline-block">
+          <i class="bi bi-house-fill me-2"></i>Back to Safety
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

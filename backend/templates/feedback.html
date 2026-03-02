@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}{% if result == 'correct' %}Correct!{% else %}Wrong Answer{% endif %} | The Midnight Escape{% endblock %}
+{% block body_class %}starter-page-page{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb only -->
+<div class="page-title dark-background">
+    <nav class="breadcrumbs">
+        <div class="container">
+            <ol>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('room_view', room_id=room_id) }}">{{ room_name }}</a></li>
+                <li class="current">{% if result == 'correct' %}Solved{% else %}Wrong Answer{% endif %}</li>
+            </ol>
+        </div>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+
+                {% if result == 'correct' %}
+
+                <!-- Correct -->
+                <div class="text-center mb-4">
+                    <div class="success-icon">
+                        <i class="bi bi-check-circle-fill d-block mb-3" style="font-size: 5rem; color: #28a745;"></i>
+                    </div>
+                    <h2 class="fw-bold mb-1" style="color: #fff;">Puzzle Solved!</h2>
+                    <p style="color: rgba(255,255,255,0.55);">
+                        You cracked the puzzle in <strong style="color: #fff;">{{ room_name }}</strong>.
+                    </p>
+                </div>
+
+                {% if reward_item %}
+                <div class="card mb-4" style="background: #1a1400; border: 1px solid rgba(255,196,81,0.5);"
+                     data-aos="zoom-in">
+                    <div class="card-body d-flex align-items-center gap-4 p-4">
+                        <i class="bi bi-key-fill" style="font-size: 2.5rem; color: var(--accent-color);"></i>
+                        <div>
+                            <div class="small text-uppercase fw-bold mb-1"
+                                 style="color: var(--accent-color); letter-spacing: 1px;">Item Added to Inventory
+                            </div>
+                            <div style="color: #fff; font-size: 1.2rem; font-weight: 600;">{{ reward_item }}</div>
+                            <div style="color: rgba(255,255,255,0.45); font-size: 0.85rem;">You may need this later.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-grid mt-3">
+                    {% if has_next %}
+                    <a id="feedback-action-btn" href="{{ url_for('room_view', room_id=next_room_id) }}"
+                       class="btn-get-started text-center" style="font-size: 1.05rem; padding: 14px;">
+                        <i class="bi bi-arrow-right-circle-fill me-2"></i>Enter Next Room
+                    </a>
+                    {% else %}
+                    <a id="feedback-action-btn" href="{{ url_for('win') }}" class="btn-get-started text-center"
+                       style="font-size: 1.05rem; padding: 14px;">
+                        <i class="bi bi-trophy-fill me-2"></i>See Your Result!
+                    </a>
+                    {% endif %}
+                </div>
+
+                {% else %}
+
+                <!-- Incorrect -->
+                <div class="text-center mb-4" id="wrong-answer-alert">
+                    <i class="bi bi-x-circle-fill d-block mb-3" style="font-size: 5rem; color: #dc3545;"></i>
+                    <h2 class="fw-bold mb-1" style="color: #fff;">Not Quite...</h2>
+                    <p style="color: rgba(255,255,255,0.55);">
+                        That wasn't the right answer for <strong style="color: #fff;">{{ room_name }}</strong>.
+                    </p>
+                </div>
+
+                <div class="card mb-4" style="background: #1e1010; border: 1px solid rgba(220,53,69,0.3);">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <i class="bi bi-chat-quote-fill" style="font-size: 1.5rem; color: rgba(220,53,69,0.7);"></i>
+                            <div>
+                                <div style="color: rgba(255,255,255,0.4); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px;">
+                                    Your Answer
+                                </div>
+                                <div style="color: #fff; font-size: 1.1rem; font-weight: 600;">"{{ wrong_answer }}"
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-color: rgba(255,255,255,0.08);">
+                        <p class="mb-0" style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                            <i class="bi bi-lightbulb-fill me-2" style="color: var(--accent-color);"></i>
+                            Read the puzzle carefully — the answer is hidden in the clues. Use hints if you're stuck.
+                            Answers are not case-sensitive.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <a id="feedback-action-btn" href="{{ url_for('room_view', room_id=room_id) }}"
+                       class="btn-get-started text-center" style="font-size: 1.05rem; padding: 14px;">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i>Try Again
+                    </a>
+                </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block scripts_extra %}
+{% if result == 'correct' %}
+<script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+<script>
+    const attempts = {
+    {
+        room_attempts
+    }
+    }
+    ;
+    const confettiNumber = Math.max(20, 200 - attempts * 30);
+
+    const confetti = new JSConfetti();
+    confetti.addConfetti({
+        confettiColors: ['#ffc451', '#ffffff', '#ffd700', '#ff6b6b', '#a8ff78'],
+        confettiRadius: 4,
+        confettiNumber: confettiNumber,
+    });
+</script>
+{% endif %}
+{% endblock %}
+
+{% endblock %}

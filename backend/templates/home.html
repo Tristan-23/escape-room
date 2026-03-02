@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block title %}Welcome | The Midnight Escape{% endblock %}
+{% block body_class %}index-page{% endblock %}
+
+{% block content %}
+
+<!-- Start Game -->
+<section id="start" class="section">
+    <div class="container" data-aos="fade-up">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+
+                <div class="section-title text-center mb-4">
+                    <h2>Begin Your Escape</h2>
+                    <p>Enter your name to start the game</p>
+                </div>
+
+                <div class="card" style="background: var(--surface-color); border: 1px solid rgba(255,196,81,0.3);">
+                    <div class="card-body p-4">
+                        <form action="{{ url_for('start') }}" method="post" data-bs-theme="dark" id="start-form">
+                            <div class="mb-3">
+                                <label for="player_name" class="form-label text-white">Your name, adventurer:</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="player_name"
+                                        name="player_name"
+                                        placeholder="Explorer"
+                                        maxlength="50"
+                                        autocomplete="off"
+                                >
+                            </div>
+                            <button type="submit" class="btn-get-started w-100 text-center d-block"
+                                    style="border-radius: 4px; padding: 10px;">
+                                <i class="bi bi-door-open me-2"></i>Start the Game
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- How to play -->
+<section id="how-to-play" class="section dark-background">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title text-center">
+            <h2>How to Play</h2>
+            <p>Read before you begin</p>
+        </div>
+
+        <div class="row gy-4 justify-content-center">
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center p-4">
+                    <i class="bi bi-shield-lock-fill fs-1 mb-3 d-block" style="color: var(--accent-color);"></i>
+                    <h4 style="color: #fff;">Three Locked Rooms</h4>
+                    <p style="color: rgba(255,255,255,0.6);">Move through 3 rooms, each with a unique puzzle. You cannot
+                        skip ahead.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center p-4">
+                    <i class="bi bi-lightbulb-fill fs-1 mb-3 d-block" style="color: var(--accent-color);"></i>
+                    <h4 style="color: #fff;">Hint System</h4>
+                    <p style="color: rgba(255,255,255,0.6);">Up to 3 hints per room. Use them wisely — hints affect your
+                        final score.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center p-4">
+                    <i class="bi bi-key-fill fs-1 mb-3 d-block" style="color: var(--accent-color);"></i>
+                    <h4 style="color: #fff;">Collect Items</h4>
+                    <p style="color: rgba(255,255,255,0.6);">Solve a room to earn an item. Some rooms require specific
+                        items to enter.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Rooms Preview -->
+<section id="rooms" class="section dark-background">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title text-center">
+            <h2>The Rooms</h2>
+            <p>Three challenges await</p>
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 text-center p-4"
+                     style="background: var(--surface-color); border: 1px solid rgba(255,196,81,0.2);">
+                    <i class="bi bi-journals fs-1 mb-3 d-block" style="color: var(--accent-color);"></i>
+                    <h5 style="color: var(--accent-color);">Room 1</h5>
+                    <h4>The Library</h4>
+                    <p class="text-muted small">Ancient books hide a secret. Listen carefully — the answer echoes
+                        through the shelves.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 text-center p-4"
+                     style="background: var(--surface-color); border: 1px solid rgba(255,196,81,0.2); opacity: 0.7;">
+                    <i class="bi bi-eyedropper fs-1 mb-3 d-block" style="color: var(--accent-color);"></i>
+                    <h5 style="color: var(--accent-color);">Room 2</h5>
+                    <h4>The Laboratory</h4>
+                    <p class="text-muted small">Chemical symbols hold the key. Only those who know their elements will
+                        pass.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 text-center p-4"
+                     style="background: var(--surface-color); border: 1px solid rgba(255,196,81,0.2); opacity: 0.5;">
+                    <i class="bi bi-lock-fill fs-1 mb-3 d-block" style="color: var(--accent-color);"></i>
+                    <h5 style="color: var(--accent-color);">Room 3</h5>
+                    <h4>The Vault</h4>
+                    <p class="text-muted small">Steel walls. A combination lock. You'll need what you've gathered to
+                        open this door.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% if has_session %}
+<!-- Overwrite confirmation modal -->
+<div class="modal fade" id="confirmNewGameModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: #1e1e2e; border: 1px solid rgba(255,196,81,0.3); color: #fff;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill me-2" style="color: var(--accent-color);"></i>
+                    Game In Progress
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="color: rgba(255,255,255,0.75);">
+                You already have a game in progress as <strong style="color: #fff;">{{ session.player_name }}</strong>.
+                Starting a new game will permanently erase your current progress.<br><br>
+                Are you sure you want to start over?
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                <a href="{{ url_for('continue_game') }}" class="header-btn header-btn-outline">
+                    <i class="bi bi-play-fill me-1"></i>Continue My Game
+                </a>
+                <button type="button" class="header-btn" id="confirm-new-game">
+                    <i class="bi bi-trash-fill me-1"></i>Start Fresh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts_extra %}
+<script>
+    (function () {
+        const form = document.getElementById('start-form');
+        const modal = new bootstrap.Modal(document.getElementById('confirmNewGameModal'));
+        const confirmBtn = document.getElementById('confirm-new-game');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            modal.show();
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            modal.hide();
+            form.submit();
+        });
+
+        document.getElementById('confirmNewGameModal').addEventListener('shown.bs.modal', function () {
+            document.addEventListener('keydown', function onEnter(e) {
+                if (e.key === 'Enter') {
+                    document.removeEventListener('keydown', onEnter);
+                    modal.hide();
+                    form.submit();
+                }
+            });
+        });
+    })();
+</script>
+{% endblock %}
+{% endif %}
+
+{% endblock %}

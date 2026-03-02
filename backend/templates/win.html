@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}You Escaped! | The Midnight Escape{% endblock %}
+{% block body_class %}starter-page-page{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb only -->
+<div class="page-title dark-background">
+    <nav class="breadcrumbs">
+        <div class="container">
+            <ol>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li class="current">Victory</li>
+            </ol>
+        </div>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <!-- Victory Header -->
+                <div class="text-center mb-5">
+                    <i class="bi bi-trophy-fill mb-3 d-block" style="font-size: 4rem; color: var(--accent-color);"></i>
+                    <h1 class="fw-bold" style="color: #fff;">You Escaped!</h1>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem;">
+                        The Midnight Escape is behind you, <strong style="color: #fff;">{{ player_name }}</strong>.
+                    </p>
+                </div>
+
+                <!-- Ending Card -->
+                {% if ending == 'legendary' %}
+                <div class="card mb-5 text-center" style="background: #1a1a0a; border: 1px solid gold;"
+                     data-aos="zoom-in">
+                    <div class="card-body py-5 px-4">
+                        <i class="bi bi-star-fill d-block mb-3" style="font-size: 3rem; color: gold;"></i>
+                        <h3 class="fw-bold mb-2" style="color: gold;">The Grandmaster Escaper</h3>
+                        <p style="color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto;">
+                            Flawless. You solved every puzzle with minimal effort and barely needed a hint.
+                            Few adventurers have ever left this place so cleanly.
+                        </p>
+                    </div>
+                </div>
+
+                {% elif ending == 'skilled' %}
+                <div class="card mb-5 text-center" style="background: #151515; border: 1px solid silver;"
+                     data-aos="zoom-in">
+                    <div class="card-body py-5 px-4">
+                        <i class="bi bi-award-fill d-block mb-3" style="font-size: 3rem; color: silver;"></i>
+                        <h3 class="fw-bold mb-2" style="color: silver;">The Tenacious Thinker</h3>
+                        <p style="color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto;">
+                            You hit a few walls, but your persistence won out. A hint here, a wrong guess there —
+                            but you never gave up. A solid escape worthy of respect.
+                        </p>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="card mb-5 text-center" style="background: #120d08; border: 1px solid #cd7f32;"
+                     data-aos="zoom-in">
+                    <div class="card-body py-5 px-4">
+                        <i class="bi bi-award d-block mb-3" style="font-size: 3rem; color: #cd7f32;"></i>
+                        <h3 class="fw-bold mb-2" style="color: #cd7f32;">The Stubborn Adventurer</h3>
+                        <p style="color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto;">
+                            It wasn't pretty, but you made it out. Through every wrong answer and desperate hint,
+                            you refused to quit. The door creaks open — you've earned it.
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Summary Stats -->
+                <div class="row gy-3 mb-5 text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="col-4">
+                        <div class="card p-3" style="background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="fw-bold mb-1" style="font-size: 2rem; color: var(--accent-color);">3</div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Rooms Escaped</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card p-3" style="background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="fw-bold mb-1"
+                                 style="font-size: 2rem; color: {% if stats.total_attempts <= 3 %}#28a745{% elif stats.total_attempts <= 8 %}var(--accent-color){% else %}#dc3545{% endif %};">
+                                {{ stats.total_attempts }}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Wrong Attempts</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card p-3" style="background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="fw-bold mb-1"
+                                 style="font-size: 2rem; color: {% if stats.total_hints == 0 %}#28a745{% elif stats.total_hints <= 5 %}var(--accent-color){% else %}#dc3545{% endif %};">
+                                {{ stats.total_hints }}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Hints Used</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Play Again -->
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <a id="feedback-action-btn" href="{{ url_for('quit_game') }}" class="btn-get-started"
+                       style="font-size: 1.1rem; padding: 14px 48px;">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Play Again
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block scripts_extra %}
+<script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+<script>
+    const confetti = new JSConfetti();
+
+    // Big burst on load
+    confetti.addConfetti({
+        confettiColors: ['#ffc451', '#ffffff', '#ffd700', '#ff6b6b', '#a8ff78'],
+        confettiRadius: 5,
+        confettiNumber: 250,
+    });
+
+    // Second wave after a short delay
+    setTimeout(function () {
+        confetti.addConfetti({
+            confettiColors: ['#ffc451', '#ffd700'],
+            confettiRadius: 4,
+            confettiNumber: 150,
+        });
+    }, 1500);
+</script>
+{% endblock %}
+
+{% endblock %}

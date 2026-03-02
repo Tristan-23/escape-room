@@ -1,0 +1,97 @@
+/* Layout */
+main.main {
+    padding-top: 80px;
+}
+
+/* Header buttons */
+.header-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-family: var(--nav-font);
+    border-radius: 4px;
+    background: var(--accent-color);
+    color: #000 !important;
+    text-decoration: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.header-btn:hover {
+    background: color-mix(in srgb, var(--accent-color), #fff 15%);
+}
+
+.header-btn-outline {
+    background: transparent;
+    color: var(--accent-color) !important;
+    border: 1px solid var(--accent-color);
+    cursor: pointer;
+}
+
+.header-btn-outline:hover {
+    background: rgba(255, 196, 81, 0.1);
+}
+
+/* Breadcrumb */
+.breadcrumbs .current {
+    color: var(--accent-color) !important;
+    font-weight: 600;
+}
+
+/* Room story text */
+.story-text {
+    line-height: 1.9;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-style: italic;
+}
+
+/* Hint items */
+.hint-item {
+    animation: fadeSlideIn 0.4s ease-out;
+    border-left: 3px solid var(--accent-color);
+    padding: 0.4rem 0.75rem;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Animations */
+.shake {
+    animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shake {
+    10%, 90%      { transform: translateX(-4px); }
+    20%, 80%      { transform: translateX(6px); }
+    30%, 50%, 70% { transform: translateX(-8px); }
+    40%, 60%      { transform: translateX(8px); }
+}
+
+.success-icon {
+    animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes bounceIn {
+    0%   { transform: scale(0.3); opacity: 0; }
+    50%  { transform: scale(1.1); }
+    80%  { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Win page endings */
+.ending-legendary { color: gold; text-shadow: 0 0 20px rgba(255, 215, 0, 0.35); }
+.ending-skilled   { color: silver; }
+.ending-survivor  { color: #cd7f32; }
+
+/* Answer input */
+#answer-input:focus {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 196, 81, 0.2);
+}

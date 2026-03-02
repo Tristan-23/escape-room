@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}{{ room.name }} | The Midnight Escape{% endblock %}
+{% block body_class %}service-details-page{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb only -->
+<div class="page-title dark-background">
+    <nav class="breadcrumbs">
+        <div class="container">
+            <ol>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                {% for r in all_rooms %}
+                <li {% if r.id== room.id %}class="current" {% endif %}>
+                    {% if r.id in completed_ids %}
+                    <a href="{{ url_for('room_view', room_id=r.id) }}">{{ r.name }}</a>
+                    {% elif r.id == room.id %}
+                    {{ r.name }}
+                    {% else %}
+                    <i class="bi bi-lock-fill me-1"></i>{{ r.name }}
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </nav>
+</div>
+
+<!-- Room Content -->
+<section class="section">
+    <div class="container" data-aos="fade-up">
+        <div class="row gy-4">
+
+            <div class="col-lg-8">
+
+                <!-- Story -->
+                <div class="mb-4">
+                    <h4 style="color: var(--accent-color);">
+                        <i class="bi bi-book-fill me-2"></i>Story
+                    </h4>
+                    <p class="story-text">{{ room.description }}</p>
+                </div>
+
+                <hr style="border-color: rgba(255,196,81,0.2);">
+
+                <!-- Puzzle -->
+                <div class="mb-4">
+                    <h4 class="mb-3" style="color: var(--accent-color);">
+                        <i class="bi bi-question-diamond-fill me-2"></i>Puzzle
+                    </h4>
+
+                    <div class="mb-4"
+                         style="border: 1px solid rgba(255,196,81,0.25); border-radius: 8px; overflow: hidden;">
+                        <!-- Question -->
+                        <div class="p-4" style="background: #1e1e2e; border-bottom: 1px solid rgba(255,196,81,0.15);">
+                            <p class="mb-0" style="color: #fff; font-size: 1.1rem; line-height: 1.8;">{{ puzzle.question
+                                }}</p>
+                        </div>
+                        <!-- Answer form -->
+                        <div class="p-4" style="background: #16162a;">
+                            <form action="{{ url_for('solve', room_id=room.id) }}" method="post" data-bs-theme="dark">
+                                <label class="form-label mb-2"
+                                       style="color: rgba(255,196,81,0.8); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                    Your Answer
+                                </label>
+                                <div class="input-group input-group-lg">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            name="answer"
+                                            id="answer-input"
+                                            placeholder="Type your answer here..."
+                                            autocomplete="off"
+                                            required
+                                    >
+                                    <button type="submit" class="btn-get-started px-4"
+                                            style="border-radius: 0 6px 6px 0; white-space: nowrap;">
+                                        <i class="bi bi-send-fill me-2"></i>Submit
+                                    </button>
+                                </div>
+                                <div class="mt-2" style="color: rgba(255,255,255,0.3); font-size: 0.8rem;">
+                                    <i class="bi bi-info-circle me-1"></i>Not case-sensitive.
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hints -->
+                <div>
+                    <h5 class="mb-3" style="color: #fff;"><i class="bi bi-lightbulb-fill me-2"
+                                                             style="color: var(--accent-color);"></i>Hints</h5>
+                    <ul class="list-unstyled mb-3" id="hints-list">
+                        {% for hint in revealed_hints %}
+                        <li class="hint-item">
+                            <i class="bi bi-chevron-right me-1" style="color: var(--accent-color);"></i>{{ hint }}
+                        </li>
+                        {% else %}
+                        <li style="color: rgba(255,255,255,0.4); font-size: 0.9rem;" id="no-hints-msg">No hints revealed
+                            yet.
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if can_get_hint %}
+                    <a
+                            href="{{ url_for('hint', room_id=room.id) }}"
+                            class="btn btn-sm"
+                            id="hint-btn"
+                            data-room-id="{{ room.id }}"
+                            style="border: 1px solid var(--accent-color); color: var(--accent-color);"
+                    >
+                        <i class="bi bi-lightbulb me-1"></i>Get Hint ({{ 3 - progress.hints_used }} remaining)
+                    </a>
+                    {% else %}
+                    <p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">
+                        <i class="bi bi-lightbulb-off me-1"></i>No more hints available.
+                    </p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <aside class="col-lg-4">
+
+                <!-- Inventory -->
+                <div class="card mb-4" style="background: #1c150a; border: 1px solid rgba(255,196,81,0.3);">
+                    <div class="card-header"
+                         style="background: rgba(255,196,81,0.1); border-bottom: 1px solid rgba(255,196,81,0.2); color: #fff;">
+                        <strong><i class="bi bi-briefcase-fill me-2"
+                                   style="color: var(--accent-color);"></i>Inventory</strong>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for item in inventory %}
+                        <li class="list-group-item"
+                            style="background: transparent; border-color: rgba(255,255,255,0.1); color: #fff;">
+                            <i class="bi bi-key-fill me-2" style="color: var(--accent-color);"></i>{{ item }}
+                        </li>
+                        {% else %}
+                        <li class="list-group-item"
+                            style="background: transparent; border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4);">
+                            <i class="bi bi-bag me-2"></i>Empty
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Room Progress -->
+                <div class="card mb-4" style="background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="card-header"
+                         style="background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff;">
+                        <strong><i class="bi bi-map-fill me-2" style="color: var(--accent-color);"></i>Progress</strong>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for r in all_rooms %}
+                        <li
+                                class="list-group-item d-flex justify-content-between align-items-center"
+                                style="background: {% if r.id == room.id %}rgba(255,196,81,0.08){% else %}transparent{% endif %}; border-color: rgba(255,255,255,0.1); color: #fff;"
+                        >
+                            <span>
+                              {% if r.id in completed_ids %}
+                                <i class="bi bi-check-circle-fill me-2 text-success"></i>
+                              {% elif r.id == room.id %}
+                                <i class="bi bi-circle-fill me-2" style="color: var(--accent-color);"></i>
+                              {% else %}
+                                <i class="bi bi-lock-fill me-2" style="color: rgba(255,255,255,0.3);"></i>
+                              {% endif %}
+                              {{ r.name }}
+                            </span>
+                            {% if r.id in completed_ids %}
+                            <span class="badge bg-success">Done</span>
+                            {% elif r.id == room.id %}
+                            <span class="badge" style="background: var(--accent-color); color: #000;">Here</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Locked</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Wrong attempts counter -->
+                <div class="card text-center p-3" style="background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="fs-1 fw-bold" id="attempt-display" style="color: var(--accent-color);">{{
+                        progress.attempts }}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Wrong attempts this room</div>
+                </div>
+
+            </aside>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
